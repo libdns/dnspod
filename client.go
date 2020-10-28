@@ -94,7 +94,7 @@ func (p *Provider) addDNSEntry(ctx context.Context, zone string, record libdns.R
 	p.getClient()
 
 	entry := d.Record{
-		Name:  strings.Trim(strings.ReplaceAll(record.Name, zone, ""), "."),
+		Name:  strings.Trim(strings.ReplaceAll(record.Name, strings.Trim(zone, "."), ""), "."),
 		Value: record.Value,
 		Type:  record.Type,
 		Line:  "默认",
