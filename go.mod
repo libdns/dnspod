@@ -1,4 +1,4 @@
-module github.com/libdns/dnspod
+module github.com/rockingdice/dnspod
 
 go 1.14
 
