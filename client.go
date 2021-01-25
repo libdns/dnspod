@@ -87,6 +87,13 @@ func (p *Provider) getDNSEntries(ctx context.Context, zone string) ([]libdns.Rec
 	return records, nil
 }
 
+func extractRecordName(name string, zone string) string {
+	if idx := strings.Index(name, "."+strings.Trim(zone, ".")); idx != -1 {
+		return name[:idx]
+	}
+	return name
+}
+
 func (p *Provider) addDNSEntry(ctx context.Context, zone string, record libdns.Record) (libdns.Record, error) {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
@@ -94,7 +101,7 @@ func (p *Provider) addDNSEntry(ctx context.Context, zone string, record libdns.R
 	p.getClient()
 
 	entry := d.Record{
-		Name:  strings.Trim(strings.ReplaceAll(record.Name, strings.Trim(zone, "."), ""), "."),
+		Name:  extractRecordName(record.Name, zone),
 		Value: record.Value,
 		Type:  record.Type,
 		Line:  "默认",
@@ -142,7 +149,7 @@ func (p *Provider) updateDNSEntry(ctx context.Context, zone string, record libdn
 	p.getClient()
 
 	entry := d.Record{
-		Name:  strings.Trim(strings.ReplaceAll(record.Name, zone, ""), "."),
+		Name:  extractRecordName(record.Name, zone),
 		Value: record.Value,
 		Type:  record.Type,
 		Line:  "默认",
